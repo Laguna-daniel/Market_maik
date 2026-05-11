@@ -71,7 +71,11 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-        // Esta ruta son públicas, es decir que no entra al filtro de arriba
-        return path.startsWith("/api/v1/auth");
+        // Rutas públicas: registro e inicio de sesión (no requieren JWT previo).
+        // Compatibilidad con prefijo antiguo y rutas actuales bajo /auth.
+        if (path.startsWith("/api/v1/auth")) {
+            return true;
+        }
+        return path.endsWith("/auth/register") || path.endsWith("/auth/login");
     }
 }
