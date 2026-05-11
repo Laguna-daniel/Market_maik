@@ -1,5 +1,4 @@
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\config\AppConfig.java
-C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\config\FilterConfig.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\Controller\AuthController.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\Controller\ProductoController.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\Controller\UserController.java
@@ -12,7 +11,6 @@ C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\ges
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\entity\Producto.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\entity\Users.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\enums\RolEnum.java
-C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\filter\JwtValidationFilter.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\GestionusuariosApplication.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\repository\ProductoRepository.java
 C:\Users\Admin\Market_maik\gestionusuarios\src\main\java\com\mifichafavorita\gestionusuarios\repository\UserRepository.java
