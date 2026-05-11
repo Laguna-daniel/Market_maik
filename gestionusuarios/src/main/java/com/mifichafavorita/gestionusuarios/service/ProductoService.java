@@ -1,6 +1,12 @@
+package com.mifichafavorita.gestionusuarios.service;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import com.mifichafavorita.gestionusuarios.entity.Producto;
+import com.mifichafavorita.gestionusuarios.repository.ProductoRepository;
 
 @Service
 public class ProductoService {

@@ -1,7 +1,6 @@
 package com.mifichafavorita.gestionusuarios.service;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -53,8 +52,8 @@ public class JwtService {
      */
     public String generateToken(Long userId, Long rolId, String username) {
         return Jwts.builder()
-                .claims(Map.of("userId", userId)) // claims personalizados
-                .claims(Map.of("rolId", rolId))
+                .claim("userId", userId)
+                .claim("rolId", rolId)
                 .subject(username) // claim por defecto (a quien pertenece este token)
                 .issuedAt(new Date()) // fecha de creacion
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration)) // fecha de expiracion
