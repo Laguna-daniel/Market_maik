@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.mifichafavorita.gestionusuarios.enums.RolEnum;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -152,5 +154,25 @@ public class JwtService {
 
         // Generamos nuevo token con nueva expiracion
         return generateToken(claims.get("userId", Long.class), claims.get("rolId", Long.class), claims.getSubject());
+    }
+
+    /**
+     * Validación manual de rol autorizado para endpoints protegidos.
+     *
+     * @param token Header Authorization completo o token limpio
+     * @return true si tiene rol permitido
+     */
+    public boolean esCajero(String token) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+
+        String jwt = token.startsWith("Bearer ") ? token.replaceFirst("Bearer\\s+", "") : token;
+        if (!isTokenValid(jwt)) {
+            return false;
+        }
+
+        Long rolId = extractRolId(jwt);
+        return RolEnum.ADMIN.getId().equals(rolId);
     }
 }
