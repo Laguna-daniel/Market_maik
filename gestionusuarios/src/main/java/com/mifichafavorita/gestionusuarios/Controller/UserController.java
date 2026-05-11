@@ -27,7 +27,8 @@ public class UserController {
     private final JwtService jwtService;
 
     @GetMapping("/list-users")
-    public ResponseEntity<List<UserResponseDTO>> listUsers(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<UserResponseDTO>> listUsers(
+            @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }

@@ -30,7 +30,8 @@ public class ProductoController {
     private final JwtService jwtService;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Producto>> getAll(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<Producto>> getAll(
+            @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
@@ -38,7 +39,8 @@ public class ProductoController {
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<Producto> save(@RequestBody Producto p, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Producto> save(@RequestBody Producto p,
+            @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
@@ -46,7 +48,8 @@ public class ProductoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
