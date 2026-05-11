@@ -1,6 +1,7 @@
 package com.mifichafavorita.gestionusuarios.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,28 +31,31 @@ public class ProductoController {
     private final JwtService jwtService;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Producto>> getAll(
+    public ResponseEntity<?> getAll(
             @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "No tiene permisos para esta operación"));
         }
         return ResponseEntity.ok(service.listarTodo());
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<Producto> save(@RequestBody Producto p,
+    public ResponseEntity<?> save(@RequestBody Producto p,
             @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "No tiene permisos para esta operación"));
         }
         return ResponseEntity.ok(service.registrarProducto(p));
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id,
+    public ResponseEntity<?> delete(@PathVariable Long id,
             @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "No tiene permisos para esta operación"));
         }
         service.borrar(id);
         return ResponseEntity.noContent().build();

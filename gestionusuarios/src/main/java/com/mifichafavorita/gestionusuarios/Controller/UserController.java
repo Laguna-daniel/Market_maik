@@ -10,6 +10,7 @@ import com.mifichafavorita.gestionusuarios.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,11 @@ public class UserController {
     private final JwtService jwtService;
 
     @GetMapping("/list-users")
-    public ResponseEntity<List<UserResponseDTO>> listUsers(
+    public ResponseEntity<?> listUsers(
             @RequestHeader(value = "Authorization", required = false) String token) {
         if (!jwtService.esCajero(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "No tiene permisos para esta operación"));
         }
 
         try {

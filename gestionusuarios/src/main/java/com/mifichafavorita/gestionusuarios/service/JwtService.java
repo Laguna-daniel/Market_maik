@@ -99,6 +99,26 @@ public class JwtService {
         return resolver.apply(claims);
     }
 
+    private static Long toLong(Object claim) {
+        if (claim == null) {
+            return null;
+        }
+        if (claim instanceof Long l) {
+            return l;
+        }
+        if (claim instanceof Integer i) {
+            return i.longValue();
+        }
+        if (claim instanceof Number n) {
+            return n.longValue();
+        }
+        return null;
+    }
+
+    private static Long toLongClaim(Claims claims, String name) {
+        return toLong(claims.get(name));
+    }
+
     /**
      * Extraer el nombre de usuario del token
      * 
@@ -116,7 +136,7 @@ public class JwtService {
      * @return id del usuario
      */
     public Long extractUserId(String token) {
-        return extractClaims(token, claims -> claims.get("userId", Long.class));
+        return extractClaims(token, claims -> toLongClaim(claims, "userId"));
     }
 
     /**
@@ -126,7 +146,7 @@ public class JwtService {
      * @return rol del usuario
      */
     public Long extractRolId(String token) {
-        return extractClaims(token, claims -> claims.get("rolId", Long.class));
+        return extractClaims(token, claims -> toLongClaim(claims, "rolId"));
     }
 
     /**
@@ -152,7 +172,7 @@ public class JwtService {
         }
 
         // Generamos nuevo token con nueva expiracion
-        return generateToken(claims.get("userId", Long.class), claims.get("rolId", Long.class), claims.getSubject());
+        return generateToken(toLongClaim(claims, "userId"), toLongClaim(claims, "rolId"), claims.getSubject());
     }
 
     /**
