@@ -16,16 +16,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+/**
+ * API de usuarios. Rutas sensibles piden header Authorization y {@link JwtService#esCajero(String)}.
+ */
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    /**
-     * Servicio de usuarios
-     */
     private final UserService userService;
     private final JwtService jwtService;
 
+    /**
+     * Lista usuarios si el JWT es valido y el rol es admin o cajero; si no, HTTP 403.
+     */
     @GetMapping("/list-users")
     public ResponseEntity<List<UserResponseDTO>> listUsers(
             @RequestHeader(value = "Authorization", required = false) String token) {

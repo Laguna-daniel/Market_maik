@@ -156,11 +156,11 @@ public class JwtService {
     }
 
     /**
-     * Uso manual en controllers: token valido y {@code rolId} igual a {@link RolEnum#CAJERO}.
-     * Acepta header completo ({@code Bearer ...}) o solo el JWT.
+     * Uso manual en controllers: token valido y rol de personal de tienda.
+     * Deja pasar {@link RolEnum#ADMIN} o {@link RolEnum#CAJERO}. Acepta {@code Bearer ...} o solo el JWT.
      *
      * @param token valor del header Authorization o el token solo
-     * @return true si el rol en el token es cajero ({@link RolEnum#CAJERO})
+     * @return true si firma ok y rol es admin o cajero
      */
     public boolean esCajero(String token) {
         if (token == null || token.isBlank()) {
@@ -173,6 +173,6 @@ public class JwtService {
         }
 
         Long rolId = extractRolId(jwt);
-        return RolEnum.CAJERO.getId().equals(rolId);
+        return RolEnum.CAJERO.getId().equals(rolId) || RolEnum.ADMIN.getId().equals(rolId);
     }
 }

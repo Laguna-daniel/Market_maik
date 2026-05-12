@@ -20,6 +20,9 @@ import com.mifichafavorita.gestionusuarios.service.ProductoService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Productos del micromarket. Lista, alta y borrado exigen JWT valido con rol admin o cajero (ver {@link JwtService#esCajero(String)}).
+ */
 @RestController
 @RequestMapping("/api/micromarket/productos")
 @CrossOrigin(origins = "*")
@@ -29,6 +32,7 @@ public class ProductoController {
     private final ProductoService service;
     private final JwtService jwtService;
 
+    /** Lista productos; 403 si el token no autoriza como admin o cajero. */
     @GetMapping("/lista")
     public ResponseEntity<List<Producto>> getAll(
             @RequestHeader(value = "Authorization", required = false) String token) {
@@ -38,6 +42,7 @@ public class ProductoController {
         return ResponseEntity.ok(service.listarTodo());
     }
 
+    /** Guarda producto; 403 si no hay permiso de admin o cajero. */
     @PostMapping("/guardar")
     public ResponseEntity<Producto> save(@RequestBody Producto p,
             @RequestHeader(value = "Authorization", required = false) String token) {
@@ -47,6 +52,7 @@ public class ProductoController {
         return ResponseEntity.ok(service.registrarProducto(p));
     }
 
+    /** Borra por id; 403 si no hay permiso de admin o cajero. */
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id,
             @RequestHeader(value = "Authorization", required = false) String token) {

@@ -8,7 +8,7 @@ public enum RolEnum {
     ADMIN(1L),
     /** Cliente que usa la tienda. */
     CLIENTE(2L),
-    /** Cajero; acceso a endpoints que validan con {@link com.mifichafavorita.gestionusuarios.service.JwtService#esCajero(String)}. */
+    /** Cajero de tienda; mismo chequeo manual que admin en rutas que usan {@code esCajero}. */
     CAJERO(3L);
 
     private final Long id;
