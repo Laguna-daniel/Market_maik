@@ -17,25 +17,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Construye y valida JWT con jjwt. Lee {@code secret-key} y {@code token-expiration}
+ * desde {@code application.yaml}. Los claims custom son {@code userId} y {@code rolId};
+ * el subject es el email del usuario.
+ */
 @Service
 public class JwtService {
-    /**
-     * Inyectamos la clave secreta en el service que viene del yaml
-     */
+    /** Clave Base64 inyectada desde el yaml; sirve para firmar y verificar el token. */
     @Value("${security.jwt.secret-key}")
     String secretKey;
 
-    /**
-     * Inyectamos la clave secreta en el service que viene del yaml
-     */
+    /** Duracion del token en milisegundos (inyectada desde el yaml). */
     @Value("${security.jwt.token-expiration}")
     Long tokenExpiration;
 
     /**
-     * Transforma la clave secreta de String (BASE64) a un obejto SecretKey
-     * utilizable por la libreria
-     * 
-     * @return firma secreta
+     * Convierte la cadena Base64 del yaml en {@link SecretKey} para HMAC.
+     *
+     * @return clave simetrica usable por {@code Jwts}
      */
     private SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -43,33 +43,33 @@ public class JwtService {
     }
 
     /**
-     * Generar el token de seguridad al iniciar sesion
-     * 
-     * @param userId
-     * @param rolId
-     * @param username
-     * @return jwt
+     * Arma el JWT despues de un login correcto.
+     *
+     * @param userId id persistido del usuario
+     * @param rolId   valor de rol en BD (debe alinearse con {@link RolEnum})
+     * @param username email; queda como {@code subject} del token
+     * @return cadena JWT firmada
      */
     public String generateToken(Long userId, Long rolId, String username) {
         return Jwts.builder()
                 .claim("userId", userId)
                 .claim("rolId", rolId)
-                .subject(username) // claim por defecto (a quien pertenece este token)
-                .issuedAt(new Date()) // fecha de creacion
-                .expiration(new Date(System.currentTimeMillis() + tokenExpiration)) // fecha de expiracion
-                .signWith(getSignKey()) // Con que firmamos el token
-                .compact(); // construye el String final
+                .subject(username) // subject = dueño logico del token (aqui el email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
+                .signWith(getSignKey())
+                .compact();
     }
 
     /**
-     * Verifica si el token es válido
-     * 
-     * @param token
-     * @return boleano
+     * Comprueba firma y forma del token; devuelve false ante cualquier error de jjwt.
+     *
+     * @param token JWT sin prefijo Bearer
+     * @return true si el parseo con la clave secreta es valido
      */
     public Boolean isTokenValid(String token) {
         try {
-            // El parser intenta descifrar la firma del token y los compara
+            // Verifica firma HMAC con la misma clave que se uso al generar
             Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
             return true;
         } catch (JwtException e) {
@@ -82,12 +82,12 @@ public class JwtService {
     }
 
     /**
-     * Extraer todos los claims del token
-     * 
-     * @param <T>
-     * @param token
-     * @param resolver
-     * @return
+     * Lee el payload y aplica una funcion para devolver un campo tipado.
+     *
+     * @param <T>      tipo de retorno
+     * @param token    JWT valido
+     * @param resolver funcion que recibe {@link Claims}
+     * @return valor extraido
      */
     public <T> T extractClaims(String token, Function<Claims, T> resolver) {
         final Claims claims = Jwts.parser()
@@ -130,11 +130,12 @@ public class JwtService {
     }
 
     /**
-     * Refresco del token si no está expirado
-     * 
-     * @param token
-     * @return token
-     * @throws Exception
+     * Emite un JWT nuevo con los mismos datos si el anterior sigue siendo parseable
+     * (no expirado segun la excepcion que maneja jjwt aqui).
+     *
+     * @param token JWT actual
+     * @return nuevo JWT con nueva fecha de expiracion
+     * @throws Exception token expirado o invalido
      */
     public String refreshToken(String token) throws Exception {
         Claims claims;
@@ -151,15 +152,15 @@ public class JwtService {
             throw new Exception("Token is invalid" + e.getMessage());
         }
 
-        // Generamos nuevo token con nueva expiracion
         return generateToken(claims.get("userId", Long.class), claims.get("rolId", Long.class), claims.getSubject());
     }
 
     /**
-     * Validación manual de rol autorizado para endpoints protegidos.
+     * Uso manual en controllers: token valido y {@code rolId} igual a {@link RolEnum#CAJERO}.
+     * Acepta header completo ({@code Bearer ...}) o solo el JWT.
      *
-     * @param token Header Authorization completo o token limpio
-     * @return true si tiene rol permitido
+     * @param token valor del header Authorization o el token solo
+     * @return true si el rol en el token es cajero ({@link RolEnum#CAJERO})
      */
     public boolean esCajero(String token) {
         if (token == null || token.isBlank()) {
@@ -172,6 +173,6 @@ public class JwtService {
         }
 
         Long rolId = extractRolId(jwt);
-        return RolEnum.ADMIN.getId().equals(rolId);
+        return RolEnum.CAJERO.getId().equals(rolId);
     }
 }

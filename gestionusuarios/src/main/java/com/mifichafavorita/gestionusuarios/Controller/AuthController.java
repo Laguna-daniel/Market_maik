@@ -19,20 +19,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Endpoints de autenticacion: registro, login y refresh del JWT.
+ * Las respuestas usan {@link org.springframework.http.ResponseEntity} con codigos HTTP estandar.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    /**
-     * Servicvio de autenticación
-     */
     private final AuthService authService;
 
     /**
-     * Registro de usuario
-     * 
-     * @param request
-     * @return RegisterResponseDTO
+     * Alta de usuario; la contraseña se convierte a formato seguro en {@link com.mifichafavorita.gestionusuarios.service.AuthService}.
+     *
+     * @param request cuerpo JSON mapeado a {@link RegisterRequestDTO}
+     * @return mensaje de resultado; HTTP 202 si termina bien; 400 si salta excepcion no controlada
      */
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
@@ -46,10 +47,10 @@ public class AuthController {
     }
 
     /**
-     * Inicio de sesion del usuario
-     * 
-     * @param request
-     * @return HttpGlobalResponse<JwtDTO>
+     * Valida credenciales y devuelve JWT dentro de {@link HttpGlobalResponse}.
+     *
+     * @param request email y contraseña en JSON
+     * @return payload con {@code data.jwt} si el login es correcto
      */
     @PostMapping("/login")
     public ResponseEntity<HttpGlobalResponse<JwtDTO>> login(@RequestBody LoginRequestDTO request) {
@@ -63,10 +64,10 @@ public class AuthController {
     }
 
     /**
-     * Refresco del jwt
-     * 
-     * @param request
-     * @return JwtDTO
+     * Renueva el token; el header debe ser {@code Authorization} con valor {@code Bearer} y el JWT separado por un espacio.
+     *
+     * @param request peticion HTTP (solo se usa el header Authorization)
+     * @return nuevo {@link JwtDTO} o 401 si falta Bearer o el refresh falla
      */
     @GetMapping("/refresh")
     public ResponseEntity<JwtDTO> refreshToken(HttpServletRequest request) {

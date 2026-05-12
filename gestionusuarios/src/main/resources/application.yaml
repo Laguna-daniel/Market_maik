@@ -7,18 +7,21 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
+      # none: Hibernate no crea ni altera tablas (la BD ya debe tener el esquema)
       ddl-auto: none
     show-sql: true
 
 server:
   port: 9090
   servlet:
+    # Todas las rutas REST van despues de este prefijo (ej. .../api/v1/auth/login)
     context-path: /api/v1/
 
 security:
   jwt:
-    # Genera llave secreta con openssl rand -base64 32
+    # Clave Base64 para firmar el JWT (debe coincidir con lo que espera jjwt)
     secret-key: ImIq9nynVF/OwzGrdCn718/u/GtPauAxV1fjmoK06Ts=
-    token-expiration: 600000 # 10 min expresado en ms
+    token-expiration: 600000 # milisegundos (10 minutos)

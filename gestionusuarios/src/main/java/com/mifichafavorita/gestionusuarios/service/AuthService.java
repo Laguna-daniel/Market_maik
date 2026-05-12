@@ -17,37 +17,31 @@ import com.mifichafavorita.gestionusuarios.entity.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+/**
+ * Reglas de autenticacion: registro con email unico, login comprobando contraseña con BCrypt y emision de JWT.
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class AuthService {
 
-    /**
-     * Repositorio de usuarios
-     */
     private final UserRepository userRepository;
 
-    /**
-     * Encriptación de contraseñas
-     */
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Servicio de jwt
-     */
     private final JwtService jwtService;
 
     /**
-     * Registro de usuario
-     * 
-     * @param request
-     * @return RegisterResponseDTO
+     * Crea usuario si el email no existe; guarda la contraseña ya pasada por BCrypt (no se puede leer tal cual en la BD).
+     *
+     * @param request datos del formulario de registro
+     * @return mensaje descriptivo (exito o email duplicado)
      */
     public RegisterResponseDTO register(RegisterRequestDTO request) {
         RegisterResponseDTO response = new RegisterResponseDTO();
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            response.setMessage("El correo ya está en uso");
+            response.setMessage("El correo ya esta en uso");
             return response;
         }
 
@@ -64,10 +58,10 @@ public class AuthService {
     }
 
     /**
-     * Inicio de sesión de usuario
-     * 
-     * @param request
-     * @return HttpGlobalResponse<JwtDTO>
+     * Busca por email, comprueba la contraseña escrita contra la guardada (BCrypt) y genera JWT.
+     *
+     * @param request credenciales
+     * @return {@code message} siempre; {@code data} solo si el login es valido
      */
     public HttpGlobalResponse<JwtDTO> login(LoginRequestDTO request) {
         HttpGlobalResponse<JwtDTO> response = new HttpGlobalResponse<>();
@@ -88,17 +82,17 @@ public class AuthService {
         JwtDTO jwtDTO = new JwtDTO();
         String jwt = jwtService.generateToken(user.getId(), user.getRolId(), user.getEmail());
         jwtDTO.setJwt(jwt);
-        response.setMessage("Inicio de sesión exitoso");
+        response.setMessage("Inicio de sesion exitoso");
         response.setData(jwtDTO);
         return response;
     }
 
     /**
-     * Refresco del JWT
-     * 
-     * @param token
-     * @return JwtDTO
-     * @throws Exception
+     * Delega en {@link JwtService#refreshToken(String)} y envuelve el string en {@link JwtDTO}.
+     *
+     * @param token JWT sin prefijo Bearer
+     * @return dto con el nuevo token
+     * @throws Exception si el token no se puede refrescar
      */
     public JwtDTO refreshToken(String token) throws Exception{
         JwtDTO response = new JwtDTO();

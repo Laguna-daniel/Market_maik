@@ -15,7 +15,7 @@ public class RegisterRequestDTO {
     private String email;
 
     /**
-     * Contraseña del usuario
+     * Contraseña; el backend la guarda de forma que no se puede reconstruir el texto original (BCrypt).
      */
     private String password;
 

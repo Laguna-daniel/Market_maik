@@ -10,7 +10,7 @@ public class LoginRequestDTO {
     private String email;
 
     /**
-     * Contraseña del usuario
+     * Contraseña en texto plano (solo viaja por HTTPS en produccion).
      */
     private String password;
 }
