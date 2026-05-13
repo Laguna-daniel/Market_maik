@@ -17,6 +17,7 @@ import com.mifichafavorita.gestionusuarios.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Endpoints de autenticacion: registro, login y refresh del JWT.
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Log4j2
 public class AuthController {
 
     private final AuthService authService;
@@ -42,7 +44,7 @@ public class AuthController {
             RegisterResponseDTO response = authService.register(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error en registro", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -59,7 +61,7 @@ public class AuthController {
             HttpGlobalResponse<JwtDTO> response = authService.login(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error en login", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -85,7 +87,7 @@ public class AuthController {
             response = authService.refreshToken(token);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error al refrescar token", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }

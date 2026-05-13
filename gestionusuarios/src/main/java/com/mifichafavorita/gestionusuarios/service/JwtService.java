@@ -16,6 +16,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Construye y valida JWT con jjwt. Lee {@code secret-key} y {@code token-expiration}
@@ -23,14 +24,18 @@ import io.jsonwebtoken.security.Keys;
  * el subject es el email del usuario.
  */
 @Service
+@Log4j2
 public class JwtService {
-    /** Clave Base64 inyectada desde el yaml; sirve para firmar y verificar el token. */
-    @Value("${security.jwt.secret-key}")
-    String secretKey;
 
-    /** Duracion del token en milisegundos (inyectada desde el yaml). */
-    @Value("${security.jwt.token-expiration}")
-    Long tokenExpiration;
+    private final String secretKey;
+    private final Long tokenExpiration;
+
+    public JwtService(
+            @Value("${security.jwt.secret-key}") String secretKey,
+            @Value("${security.jwt.token-expiration}") Long tokenExpiration) {
+        this.secretKey = secretKey;
+        this.tokenExpiration = tokenExpiration;
+    }
 
     /**
      * Convierte la cadena Base64 del yaml en {@link SecretKey} para HMAC.
@@ -73,10 +78,10 @@ public class JwtService {
             Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
             return true;
         } catch (JwtException e) {
-            e.printStackTrace();
+            log.debug("JWT no valido: {}", e.getMessage());
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Error al verificar JWT", e);
             return false;
         }
     }
@@ -101,7 +106,7 @@ public class JwtService {
 
     /**
      * Extraer el nombre de usuario del token
-     * 
+     *
      * @param token
      * @return nombre de usuario
      */
@@ -111,7 +116,7 @@ public class JwtService {
 
     /**
      * Extrae el id del usuario
-     * 
+     *
      * @param token
      * @return id del usuario
      */
@@ -121,7 +126,7 @@ public class JwtService {
 
     /**
      * Extrae el rol del usuario
-     * 
+     *
      * @param token
      * @return rol del usuario
      */
