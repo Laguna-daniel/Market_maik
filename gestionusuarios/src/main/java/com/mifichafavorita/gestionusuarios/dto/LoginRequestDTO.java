@@ -2,6 +2,7 @@ package com.mifichafavorita.gestionusuarios.dto;
 
 import lombok.Data;
 
+/** Credenciales enviadas al endpoint {@code POST /auth/login}. */
 @Data
 public class LoginRequestDTO {
     /**

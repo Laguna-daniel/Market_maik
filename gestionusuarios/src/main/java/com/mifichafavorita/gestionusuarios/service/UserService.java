@@ -11,15 +11,20 @@ import com.mifichafavorita.gestionusuarios.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Construye respuestas de usuario para la API sin exponer la contraseña ni datos internos de {@link Users}.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    /**
-     * Repositorio del usuario
-     */
     private final UserRepository userRepository;
 
+    /**
+     * Lee todos los usuarios de la base de datos y los proyecta a {@link UserResponseDTO}.
+     *
+     * @return lista de DTOs; el campo {@code rol} refleja {@code rol_id} de cada fila
+     */
     public List<UserResponseDTO> listUsers() {
         List<Users> usersFound = userRepository.findAll();
         List<UserResponseDTO> response = new ArrayList<>();

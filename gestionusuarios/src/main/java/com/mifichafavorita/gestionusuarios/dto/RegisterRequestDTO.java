@@ -2,6 +2,7 @@ package com.mifichafavorita.gestionusuarios.dto;
 
 import lombok.Data;
 
+/** Datos del formulario de alta enviados a {@code POST /auth/register}. El campo {@code rol} se persiste como {@code rol_id}. */
 @Data
 public class RegisterRequestDTO {
     /**

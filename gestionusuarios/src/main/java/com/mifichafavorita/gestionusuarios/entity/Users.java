@@ -8,6 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+/**
+ * Usuario de la aplicacion. La columna {@code rol_id} debe coincidir con los ids de {@link com.mifichafavorita.gestionusuarios.enums.RolEnum}
+ * en la base de datos (admin, cliente, cajero).
+ */
 @Entity
 @Data
 @Table(name = "Users")

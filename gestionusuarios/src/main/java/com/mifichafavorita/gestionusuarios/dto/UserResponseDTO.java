@@ -2,6 +2,9 @@ package com.mifichafavorita.gestionusuarios.dto;
 
 import lombok.Data;
 
+/**
+ * Vista de usuario para listados (por ejemplo {@code GET /users/list-users}). No incluye contraseña.
+ */
 @Data
 public class UserResponseDTO {
     /**
