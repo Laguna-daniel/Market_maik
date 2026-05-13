@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +21,10 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Productos del micromarket. Lista, alta y borrado exigen JWT valido con rol admin o cajero (ver {@link JwtService#esCajero(String)}).
+ * CORS: configuracion global en {@link com.mifichafavorita.gestionusuarios.config.AppConfig}.
  */
 @RestController
 @RequestMapping("/api/micromarket/productos")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ProductoController {
 

@@ -1,6 +1,11 @@
 package com.mifichafavorita.gestionusuarios.Controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,21 +15,15 @@ import com.mifichafavorita.gestionusuarios.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-
 /**
  * API de usuarios. Rutas sensibles piden header Authorization y {@link JwtService#esCajero(String)}.
+ * CORS: configuracion global en {@link com.mifichafavorita.gestionusuarios.config.AppConfig}.
  */
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
     private final JwtService jwtService;
 
