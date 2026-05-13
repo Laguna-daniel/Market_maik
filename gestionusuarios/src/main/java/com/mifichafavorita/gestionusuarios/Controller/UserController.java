@@ -1,5 +1,6 @@
 package com.mifichafavorita.gestionusuarios.Controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
  */
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -36,12 +38,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
-        try {
-            List<UserResponseDTO> response = userService.listUsers();
-            return ResponseEntity.status(HttpStatus.FOUND).body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        return ResponseEntity.ok(userService.listUsers());
     }
 }

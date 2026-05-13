@@ -3,7 +3,6 @@ package com.mifichafavorita.gestionusuarios.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import com.mifichafavorita.gestionusuarios.dto.UserResponseDTO;

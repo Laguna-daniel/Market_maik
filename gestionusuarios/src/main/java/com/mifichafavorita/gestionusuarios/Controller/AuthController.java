@@ -33,13 +33,13 @@ public class AuthController {
      * Alta de usuario; la contraseña se convierte a formato seguro en {@link com.mifichafavorita.gestionusuarios.service.AuthService}.
      *
      * @param request cuerpo JSON mapeado a {@link RegisterRequestDTO}
-     * @return mensaje de resultado; HTTP 202 si termina bien; 400 si salta excepcion no controlada
+     * @return mensaje de resultado; HTTP 200 si termina bien; 400 si salta excepcion no controlada
      */
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         try {
             RegisterResponseDTO response = authService.register(request);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -56,7 +56,7 @@ public class AuthController {
     public ResponseEntity<HttpGlobalResponse<JwtDTO>> login(@RequestBody LoginRequestDTO request) {
         try {
             HttpGlobalResponse<JwtDTO> response = authService.login(request);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -82,7 +82,7 @@ public class AuthController {
 
         try {
             response = authService.refreshToken(token);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

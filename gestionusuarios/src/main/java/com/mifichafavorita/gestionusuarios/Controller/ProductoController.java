@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductoController {
 
-    private final ProductoService service;
+    private final ProductoService productoService;
     private final JwtService jwtService;
 
     /** Lista productos; 403 si el token no autoriza como admin o cajero. */
@@ -39,7 +39,7 @@ public class ProductoController {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-        return ResponseEntity.ok(service.listarTodo());
+        return ResponseEntity.ok(productoService.listarTodo());
     }
 
     /** Guarda producto; 403 si no hay permiso de admin o cajero. */
@@ -49,7 +49,7 @@ public class ProductoController {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-        return ResponseEntity.ok(service.registrarProducto(p));
+        return ResponseEntity.ok(productoService.registrarProducto(p));
     }
 
     /** Borra por id; 403 si no hay permiso de admin o cajero. */
@@ -59,7 +59,7 @@ public class ProductoController {
         if (!jwtService.esCajero(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        service.borrar(id);
+        productoService.borrar(id);
         return ResponseEntity.noContent().build();
     }
 }
